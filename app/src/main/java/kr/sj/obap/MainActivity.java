@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void captureCamera(){
+    public void captureCamera(){
         String state = Environment.getExternalStorageState();
         //외장 메모리 검사
         if(Environment.MEDIA_MOUNTED.equals(state)){

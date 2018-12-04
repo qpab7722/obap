@@ -20,6 +20,7 @@ public class LikeFragment extends Fragment {
         iv_cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((MainActivity)getActivity()).captureCamera();
             }
         });
 
