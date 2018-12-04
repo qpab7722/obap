@@ -3,22 +3,40 @@ package kr.sj.obap;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSION_STORAGE =1111;
+    private static final int REQUEST_TAKE_PHOTO =2222;
+
+    Uri imageUri;//,photoUri;
+    String mCurrentPhotoPath;
 
     ActionBar ab;
 
@@ -43,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_camera:
                     //mTextMessage.setText(R.string.title_dashboard);
-                    frag = new CameraFragment();
                     ab.setTitle("음식 입력") ;
+                    captureCamera();
                     break;
                 case R.id.navigation_like:
                     //mTextMessage.setText(R.string.title_dashboard);
@@ -98,5 +116,102 @@ public class MainActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions((Activity)this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSION_STORAGE);
         }
+    }
+
+    private void captureCamera(){
+        String state = Environment.getExternalStorageState();
+        //외장 메모리 검사
+        if(Environment.MEDIA_MOUNTED.equals(state)){
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if(takePictureIntent.resolveActivity(getPackageManager())!=null){
+                File photoFile=null;
+                try{
+                    photoFile = createImageFile();
+                }catch (IOException ex){
+                    Log.e("captureCameran Error",ex.toString());
+                }
+                if (photoFile != null) {
+                    Uri providerURI = FileProvider.getUriForFile(this, getPackageName(), photoFile);
+                    imageUri=providerURI;
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,providerURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
+            }
+        }
+        else{
+            Toast.makeText(this,"저장 공간 접근 불가",Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
+    public File createImageFile() throws IOException{
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = timeStamp+".jpg";
+        File imageFile =null;
+        File storageDir = new File(Environment.getExternalStorageDirectory()+"/Pictures","obap");
+
+        if(!storageDir.exists()){
+            Log.i(" mcurrentPhotopath",storageDir.toString());
+            storageDir.mkdirs();
+        }
+
+        imageFile = new File(storageDir, imageFileName);
+        mCurrentPhotoPath=imageFile.getAbsolutePath();
+
+        return imageFile;
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_TAKE_PHOTO:
+                if(resultCode == Activity.RESULT_OK){
+                    try{
+                        Log.i("REQUEST_TAKE_PHOTO","OK");
+                        galleryAddPic();
+                        startCropImageActivity();
+                    } catch (Exception e){
+                        Log.i("REQUEST_TAKE_PHOTO",e.toString());
+                    }
+                }
+                break;
+
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri resultUri = result.getUri();//uri of crop result
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageURI", resultUri.toString());
+                    Log.e("camac",resultUri.toString());
+                    Fragment frag = new CameraFragment();
+                    frag.setArguments(bundle);
+                    loadFragment(frag);
+                    //iv_cam.setImageURI(resultUri);
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                    Log.e("REQUEST_TAKE_PHOTO",error.toString());
+                }
+
+                break;
+        }
+    }
+
+    private void galleryAddPic(){
+        Log.i("galleryAddPic","Call");
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        //photoUri=contentUri;
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
+        Toast.makeText(this,"사진이 앨범에 저장되었습니다",Toast.LENGTH_SHORT).show();
+    }
+
+    private void startCropImageActivity() {
+        Log.e("camac","크롭이미지");
+        CropImage.activity(imageUri).start(this);
     }
 }
