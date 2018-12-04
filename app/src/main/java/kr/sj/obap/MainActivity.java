@@ -19,7 +19,6 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSION_STORAGE =1111;
-    private static final int REQUEST_TAKE_PHOTO =2222;
 
     ActionBar ab;
 
@@ -35,23 +34,27 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     //mTextMessage.setText(R.string.title_home);
                     frag = new HomeFragment();
+                    ab.setTitle("") ;
                     break;
                 case R.id.navigation_diary:
                     //mTextMessage.setText(R.string.title_notifications);
                     frag = new DiaryFragment();
+                    ab.setTitle("식사 다이어리") ;
                     break;
                 case R.id.navigation_camera:
                     //mTextMessage.setText(R.string.title_dashboard);
                     frag = new CameraFragment();
-                    ab.setTitle("음식입력") ;
+                    ab.setTitle("음식 입력") ;
                     break;
                 case R.id.navigation_like:
                     //mTextMessage.setText(R.string.title_dashboard);
                     frag = new LikeFragment();
+                    ab.setTitle("저장 목록") ;
                     break;
                 case R.id.navigation_mypage:
                     //mTextMessage.setText(R.string.title_dashboard);
                     frag = new MypageFragment();
+                    ab.setTitle("마이페이지") ;
                     break;
 
             }
