@@ -1,9 +1,12 @@
 package kr.sj.obap;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,34 +28,43 @@ public class HomeFragment extends Fragment {
         tv_Vita=(TextView)view.findViewById(R.id.tv_vita);
         tv_Diet=(TextView)view.findViewById(R.id.tv_diet);
         tv_Calcium=(TextView)view.findViewById(R.id.tv_calcium);
+
         load_values();
 
         return view;
     }
 
     private void load_values() {
-       /*
-            // 값 가져오기.
-            float cal = cursor.getFloat(0) ;
-            tv_Cal.setText(Float.toString(cal)) ;
 
-            float carbo = cursor.getFloat(1) ;
-            tv_Carbo.setText(Float.toString(carbo)) ;
+        if(MainActivity.dbHelper!=null){
+            SQLiteDatabase db = MainActivity.dbHelper.getReadableDatabase() ;
+            Cursor cursor = db.rawQuery(DBContract.SQL_SELECT_USER_NUTRIENT, null) ;
 
-            float prot = cursor.getFloat(2) ;
-            tv_Prot.setText(Float.toString(prot)) ;
+            while (cursor.moveToNext()) {
+                // 값 가져오기.
+                float cal = cursor.getFloat(0) ;
+                tv_Cal.setText(Float.toString(cal)) ;
 
-            float fat = cursor.getFloat(3) ;
-            tv_Fat.setText(Float.toString(fat)) ;
+                float carbo = cursor.getFloat(1) ;
+                tv_Carbo.setText(Float.toString(carbo)) ;
 
-            float vita = cursor.getFloat(4) ;
-            tv_Vita.setText(Float.toString(vita)) ;
+                float prot = cursor.getFloat(2) ;
+                tv_Prot.setText(Float.toString(prot)) ;
 
-            float diet = cursor.getFloat(5) ;
-            tv_Diet.setText(Float.toString(diet)) ;
+                float fat = cursor.getFloat(3) ;
+                tv_Fat.setText(Float.toString(fat)) ;
 
-            float calcium = cursor.getFloat(6) ;
-            tv_Calcium.setText(Float.toString(calcium));
-            */
+                float vita = cursor.getFloat(4) ;
+                tv_Vita.setText(Float.toString(vita)) ;
+
+                float diet = cursor.getFloat(5) ;
+                tv_Diet.setText(Float.toString(diet)) ;
+
+                float calcium = cursor.getFloat(6) ;
+                tv_Calcium.setText(Float.toString(calcium)) ;
+
+                Log.e("nut",cal +" "+calcium);
+            }
+        }
     }
 }

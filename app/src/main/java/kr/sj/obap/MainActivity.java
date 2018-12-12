@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,13 +27,17 @@ import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static DbSqliteOpenHelper dbHelper;
     private static final int MY_PERMISSION_STORAGE =1111;
     private static final int REQUEST_TAKE_PHOTO =2222;
 
@@ -91,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         ab= getSupportActionBar() ;
         checkPermission();
+        dbHelper = new DbSqliteOpenHelper(getApplicationContext());
+        try {
+            readcsv();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -214,4 +226,44 @@ public class MainActivity extends AppCompatActivity {
         Log.e("camac","크롭이미지");
         CropImage.activity(imageUri).start(this);
     }
+
+    public void readcsv() throws IOException {
+        //https://stackoverflow.com/questions/16672074/import-csv-file-to-sqlite-in-android
+        String line = "";
+        String tableName =DBContract.TBL_NUT_NEEDED;
+        String columns = DBContract.ADD_CVS_NUT_NEED_TBL;//+  "_id, name, dt1, dt2, dt3";
+        String str1 = "INSERT INTO " + tableName + " (" + columns + ") values(";
+        String str2 = ");";
+
+        InputStream is = getAssets().open("Daily_nutrient.csv");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        SQLiteDatabase db =  MainActivity.dbHelper.getReadableDatabase() ;
+
+        db.beginTransaction();
+        while ((line = br.readLine()) != null) {
+            StringBuilder sb = new StringBuilder(str1);
+            String[] str = line.split(",");
+            sb.append("'" + str[0] + "',");
+            sb.append("'" +str[1] + "',");
+            sb.append("'" +str[2] + "',");
+            sb.append("'" +str[3] + "',");
+            sb.append("'" +str[4] + "'");
+            sb.append(str2);
+            db.execSQL(sb.toString());
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        Cursor cursor = db.rawQuery(DBContract.SQL_SELECT_NUT_NEED, null) ;
+        while (cursor.moveToNext()) {
+            int age = cursor.getInt(0) ;
+            float cal = cursor.getFloat(1) ;
+            float pro = cursor.getFloat(2) ;
+            float sod = cursor.getFloat(3) ;
+            float calcium = cursor.getFloat(4) ;
+            Log.e("csvvvvvvvvvvv",age + " "+cal+ " "+pro+ " "+sod+ " "+calcium);
+        }
+
+    }
+
 }

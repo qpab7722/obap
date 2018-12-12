@@ -6,35 +6,133 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="180dp"
         android:orientation="horizontal"
         android:padding="20dp">
+
         <TextView
             android:id="@+id/tv_dymorning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="아침 >"
-            android:textSize="30dp"
-            android:textColor="#000000"
-            android:layout_centerVertical="true"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/search"
-            android:layout_toLeftOf="@+id/iv_dycam"
-            android:layout_marginRight="20dp"
             android:layout_centerVertical="true"
-            />
+            android:text="아침 >"
+            android:textColor="#000000"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/tv_breakfast"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/tv_dymorning"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:textSize="25dp" />
+
         <ImageView
-            android:id="@+id/iv_dycam"
+            android:id="@+id/iv_moringserch"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/camera"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/iv_moringcam"
+            android:background="@drawable/search" />
+
+        <ImageView
+            android:id="@+id/iv_moringcam"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:background="@drawable/camera" />
+
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tv_dylunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="점심 >"
+            android:textColor="#000000"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/tv_lunch"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/tv_dylunch"
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp" />
+
+        <ImageView
+            android:id="@+id/iv_lunchserch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/iv_lunchcam"
+            android:background="@drawable/search" />
+
+        <ImageView
+            android:id="@+id/iv_lunchcam"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/camera" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tv_dydinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="저녁 >"
+            android:textColor="#000000"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/tv_dinner"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/tv_dydinner"
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp" />
+
+        <ImageView
+            android:id="@+id/iv_dinnerserch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/iv_dinnercam"
+            android:background="@drawable/search" />
+
+        <ImageView
+            android:id="@+id/iv_dinnercam"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/camera" />
+
+    </RelativeLayout>
 
 </LinearLayout>
