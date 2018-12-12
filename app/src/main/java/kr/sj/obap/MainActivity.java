@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
         dbHelper = new DbSqliteOpenHelper(getApplicationContext());
         try {
-            readcsv();
+            readDailycsv();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         CropImage.activity(imageUri).start(this);
     }
 
-    public void readcsv() throws IOException {
+    public void readDailycsv() throws IOException {
         //https://stackoverflow.com/questions/16672074/import-csv-file-to-sqlite-in-android
         String line = "";
         String tableName =DBContract.TBL_NUT_NEEDED;
